@@ -1,0 +1,212 @@
+[
+    {
+        "image_id": 516916,
+        "type": "poor_localization",
+        "gt_box": [
+            195.03,
+            219.08,
+            225.47,
+            238.55
+        ],
+        "yolo_box": [
+            96.56268310546875,
+            198.03746032714844,
+            301.1249084472656,
+            479.5302734375
+        ],
+        "frcnn_box": [
+            195.06114196777344,
+            219.2534637451172,
+            225.12655639648438,
+            238.35858154296875
+        ],
+        "gt_class": 77,
+        "gt_area": 592.6668,
+        "size_category": "small",
+        "yolo_iou": 0.0102924288566836,
+        "frcnn_iou": 0.969184133947344,
+        "iou_diff": 0.9588917050906605,
+        "severity": "high"
+    },
+    {
+        "image_id": 530836,
+        "type": "poor_localization",
+        "gt_box": [
+            0.0,
+            190.59,
+            30.24,
+            209.08
+        ],
+        "yolo_box": [
+            0.0,
+            208.66412353515625,
+            58.20817184448242,
+            413.5732421875
+        ],
+        "frcnn_box": [
+            0.005135142710059881,
+            190.2956085205078,
+            30.78261375427246,
+            208.8186798095703
+        ],
+        "gt_class": 51,
+        "gt_area": 559.1376000000002,
+        "size_category": "small",
+        "yolo_iou": 0.001008189712654444,
+        "frcnn_iou": 0.9533848832274268,
+        "iou_diff": 0.9523766935147723,
+        "severity": "high"
+    },
+    {
+        "image_id": 357888,
+        "type": "poor_localization",
+        "gt_box": [
+            269.57,
+            342.61,
+            289.03,
+            358.18
+        ],
+        "yolo_box": null,
+        "frcnn_box": [
+            269.2621154785156,
+            342.3404541015625,
+            288.9952392578125,
+            357.9281311035156
+        ],
+        "gt_class": 47,
+        "gt_area": 302.99219999999957,
+        "size_category": "small",
+        "yolo_iou": 0,
+        "frcnn_iou": 0.9505824624310707,
+        "iou_diff": 0.9505824624310707,
+        "severity": "high"
+    },
+    {
+        "image_id": 222825,
+        "type": "poor_localization",
+        "gt_box": [
+            173.15,
+            346.83,
+            185.48000000000002,
+            383.95
+        ],
+        "yolo_box": null,
+        "frcnn_box": [
+            173.0694122314453,
+            345.9358215332031,
+            185.541259765625,
+            383.289794921875
+        ],
+        "gt_class": 44,
+        "gt_area": 457.6896000000005,
+        "size_category": "small",
+        "yolo_iou": 0,
+        "frcnn_iou": 0.9483894223947558,
+        "iou_diff": 0.9483894223947558,
+        "severity": "high"
+    },
+    {
+        "image_id": 100274,
+        "type": "poor_localization",
+        "gt_box": [
+            91.57,
+            169.76,
+            110.85999999999999,
+            184.07999999999998
+        ],
+        "yolo_box": null,
+        "frcnn_box": [
+            91.9788818359375,
+            169.50413513183594,
+            110.72107696533203,
+            183.97093200683594
+        ],
+        "gt_class": 3,
+        "gt_area": 276.23279999999977,
+        "size_category": "small",
+        "yolo_iou": 0,
+        "frcnn_iou": 0.9477482983998944,
+        "iou_diff": 0.9477482983998944,
+        "severity": "high"
+    },
+    {
+        "image_id": 405691,
+        "type": "false_negative",
+        "gt_box": [
+            439.41,
+            407.16,
+            474.71000000000004,
+            427.0
+        ],
+        "gt_class": 48,
+        "gt_area": 700.3519999999993,
+        "size_category": "small",
+        "yolo_max_iou": 0.21992428370713912,
+        "frcnn_max_iou": 0.949607424494062,
+        "severity": "high"
+    },
+    {
+        "image_id": 29596,
+        "type": "false_negative",
+        "gt_box": [
+            188.78,
+            241.39,
+            199.61,
+            258.31
+        ],
+        "gt_class": 86,
+        "gt_area": 183.24360000000038,
+        "size_category": "small",
+        "yolo_max_iou": 0.00040979069335059405,
+        "frcnn_max_iou": 0.7438710764440735,
+        "severity": "high"
+    },
+    {
+        "image_id": 100274,
+        "type": "false_negative",
+        "gt_box": [
+            91.57,
+            169.76,
+            110.85999999999999,
+            184.07999999999998
+        ],
+        "gt_class": 3,
+        "gt_area": 276.23279999999977,
+        "size_category": "small",
+        "yolo_max_iou": 0,
+        "frcnn_max_iou": 0.7666749267963477,
+        "severity": "high"
+    },
+    {
+        "image_id": 100274,
+        "type": "false_negative",
+        "gt_box": [
+            107.35,
+            166.48,
+            117.25999999999999,
+            179.12
+        ],
+        "gt_class": 3,
+        "gt_area": 125.2624000000001,
+        "size_category": "small",
+        "yolo_max_iou": 0,
+        "frcnn_max_iou": 0.7152507765947314,
+        "severity": "high"
+    },
+    {
+        "image_id": 100274,
+        "type": "false_negative",
+        "gt_box": [
+            0.0,
+            180.83,
+            13.5,
+            195.24
+        ],
+        "gt_class": 3,
+        "gt_area": 194.53499999999997,
+        "size_category": "small",
+        "yolo_max_iou": 0,
+        "frcnn_max_iou": 0.9144128289645422,
+        "severity": "high"
+    }
+]

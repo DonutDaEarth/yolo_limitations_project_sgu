@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project Specific
+# Data (large files - don't commit)
+data/coco/val2017/
+data/coco/train2017/
+data/coco/test2017/
+data/coco/*.zip
+data/coco/annotations/*.zip
+data/coco/annotations/*_train2017.json
+data/coco/annotations/instances_val2017.json
+data/coco/annotations/captions_*.json
+data/coco/annotations/person_keypoints_val2017.json
+# Keep only the subset annotation files (small)
+!data/coco/annotations/instances_val2017_subset*.json
+data/sku110k/
+data/exdark/
+
+# Results (can commit summary files, but not all images)
+results/metrics/*.npz
+results/comparisons/*.png
+results/failure_cases/*.png
+
+# Checkpoints
+checkpoints/
+*.pt
+*.pth
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Keep result directories but ignore contents
+!results/.gitkeep
+!data/.gitkeep

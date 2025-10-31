@@ -1,0 +1,36 @@
+{
+    "yolo": {
+        "model_info": {
+            "model_type": "YOLO",
+            "variant": "yolov8n",
+            "device": "cpu",
+            "conf_threshold": 0.25,
+            "iou_threshold": 0.45
+        },
+        "metrics": {
+            "mAP@[0.5:0.95]": 0.00033827881449242263,
+            "mAP@0.5": 0.00039589025393617995,
+            "mAP(Small)": 0.0,
+            "mAP(Medium)": 0.004835789388219055,
+            "mAP(Large)": 0.0017434076644602962
+        },
+        "num_images": 500
+    },
+    "faster_rcnn": {
+        "model_info": {
+            "model_type": "Faster R-CNN",
+            "backbone": "resnet50",
+            "device": "cpu",
+            "conf_threshold": 0.25,
+            "iou_threshold": 0.5
+        },
+        "metrics": {
+            "mAP@[0.5:0.95]": 0.00011964010708185558,
+            "mAP@0.5": 0.00022134513407417875,
+            "mAP(Small)": 0.00032938076416337287,
+            "mAP(Medium)": 0.00025416502689229963,
+            "mAP(Large)": 0.0005091712798479715
+        },
+        "num_images": 500
+    }
+}
