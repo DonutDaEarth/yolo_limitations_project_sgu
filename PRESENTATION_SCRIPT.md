@@ -245,561 +245,176 @@
 
 ---
 
-# 💻 PART 2: CODE DEMONSTRATION (15 Minutes)
+# 💻 PART 2: CODE DEMONSTRATION (8 Minutes)
 
-## PERSON A: Speed Benchmark Demonstration (7 minutes)
-
-### Introduction (30 seconds)
-
-**[Screen shows terminal ready at project directory]**
-
-> "Hello, I'm [Person A] again, and I'll demonstrate our speed benchmarking code. This validates the 44× speedup we've been discussing with live execution. You'll see both models running on the same hardware, processing the same images, and we'll compare the timing results in real-time."
-
-### Environment Setup (1 minute)
-
-**[Execute commands]**
-
-```powershell
-# Navigate to project
-cd "C:\Users\ss1ku\01 STEVEN FILES\SGU\7th Semester\Pattern Recognition & Image Processing\computer_vision\yolo_limitations_project"
-pwd
-
-# Show virtual environment is active
-..\venv\Scripts\python.exe --version
-..\venv\Scripts\pip.exe list | Select-String -Pattern "torch|ultralytics|detectron2"
-```
-
-**[While running]**
-
-> "First, confirming our environment setup. We're using Python 3.9 with PyTorch 2.8.0 for the deep learning framework, Ultralytics version 8.3.223 for YOLO implementation, and Detectron2 version 0.6 for Faster R-CNN. All dependencies are confirmed and consistent with our technical report specifications."
-
-### Model Loading Demonstration (1.5 minutes)
-
-**[Show test scripts]**
-
-```powershell
-# Test YOLO loading
-Write-Host "`n=== Testing YOLO Model Loading ===" -ForegroundColor Cyan
-..\venv\Scripts\python.exe test_yolo.py
-```
-
-**[While YOLO loads]**
-
-> "Watch how quickly YOLOv8n loads. This is the 6.2 megabyte model—just 3.2 million parameters. It loads almost instantly even on CPU because it's so lightweight. This is one of YOLO's deployment advantages."
-
-**[After output shows "Model loaded successfully"]**
-
-> "There—model loaded, test image processed successfully. Inference took about 50 milliseconds. Now let's load Faster R-CNN and observe the difference:"
-
-```powershell
-# Test Faster R-CNN loading
-Write-Host "`n=== Testing Faster R-CNN Model Loading ===" -ForegroundColor Cyan
-..\venv\Scripts\python.exe test_faster_rcnn.py
-```
-
-**[While Faster R-CNN loads - takes noticeably longer]**
-
-> "Notice the difference. Faster R-CNN with ResNet-50 is 167 megabytes—41.8 million parameters. It takes noticeably longer to load into memory and initialize all the weights. This is the first hint of the computational trade-off we're about to quantify."
-
-**[After loading completes]**
-
-> "Model loaded. Test inference... and there, about 2 seconds per image. Dramatically slower than YOLO's 50 milliseconds."
-
-### Speed Benchmark Execution (3 minutes)
-
-**[Show benchmark script]**
-
-```powershell
-Write-Host "`n=== Running Speed Benchmark (Task B) ===" -ForegroundColor Cyan
-..\venv\Scripts\python.exe scripts\run_taskB.py --num_images 500 --device cpu
-```
-
-**[While script runs - will take several minutes]**
-
-> "This script benchmarks both models on 500 COCO validation images—the same images we used for all our analysis. Let me explain what's happening internally:"
-
-> "First, the script loads both models into memory. Then, for each of the 500 images, it performs these steps:"
-
-1. **Load image** from disk into memory
-2. **Preprocess**: Resize to model's expected input size, normalize pixel values, convert to tensor
-3. **Run inference**: Forward pass through the network
-4. **Time measurement**: We use Python's `time.perf_counter()` for high-precision timing
-5. **Post-process**: Apply non-maximum suppression (NMS) to remove duplicate detections, convert to COCO format
-
-> "We're timing the complete inference pipeline—preprocessing, forward pass, and post-processing. We exclude only model loading time because that's a one-time cost in deployment. This simulates a real-world deployed system processing images."
-
-**[As progress indicators show]**
-
-> "You can see the progress. YOLO is processing very quickly—each image takes about 50 milliseconds. Watch the Faster R-CNN phase... much slower. Each image is taking over 2 seconds. This is the trade-off materializing in real-time."
-
-**[If benchmark takes too long, can pause recording and resume after completion]**
-
-> "I'll pause here while the full benchmark completes..."
-
-**[Resume after benchmark completes]**
-
-> "Benchmark complete! Let's examine the results:"
-
-```powershell
-Write-Host "`n=== Speed Benchmark Results ===" -ForegroundColor Green
-Get-Content results\benchmark\taskB_results.json | ConvertFrom-Json | ConvertTo-Json -Depth 10
-```
-
-**[Point to specific numbers on screen]**
-
-> "Here are the key metrics:"
-
-- **YOLOv8n**: 20.45 FPS (frames per second), mean time 48.9 milliseconds per image
-- **Faster R-CNN**: 0.46 FPS, mean time 2,156 milliseconds—that's 2.156 seconds per image
-- **Speedup calculation**: 20.45 divided by 0.46 equals 44.1 times faster
-
-> "This is the quantified speed advantage. YOLO is 44 times faster. In real-world terms: YOLO processes 20 images in one second; Faster R-CNN takes 2.2 seconds to process one image. This is the 'speed' side of our speed-accuracy trade-off."
-
-### Accuracy Results Display (1 minute)
-
-```powershell
-Write-Host "`n=== Accuracy Results (Task A) ===" -ForegroundColor Green
-Get-Content results\metrics\taskA_results.json | ConvertFrom-Json | ConvertTo-Json -Depth 10
-```
-
-**[Point to mAP(Small) values prominently]**
-
-> "Now the 'accuracy' side—specifically, small object detection performance:"
-
-**[Highlight these numbers]**
-
-- **YOLO mAP(Small)**: 0.0000 ← "Zero detections—complete failure"
-- **Faster R-CNN mAP(Small)**: 0.00033 ← "Successfully detected some small objects"
-
-> "This is the trade-off quantified: YOLO gains 44× speed but loses 100% of small object detection capability. Zero percent. Not low—zero. This is the cost of the single-shot, grid-based architecture."
-
-### Speed-Accuracy Plot Visualization (30 seconds)
-
-```powershell
-Write-Host "`n=== Opening Speed-Accuracy Trade-off Plot ===" -ForegroundColor Green
-Start-Process results\plots\speed_accuracy_tradeoff.png
-```
-
-**[As plot opens]**
-
-> "This plot visualizes the fundamental trade-off. X-axis: inference time on logarithmic scale. Y-axis: mAP score. Two points: YOLO up here—fast inference, low small-object accuracy. Faster R-CNN down here—slow inference, higher small-object accuracy. They represent different Pareto-optimal points—neither dominates the other across both metrics. The choice depends on your application's constraints."
+**⚠️ NOTE:** Part 1 took 22 minutes, leaving 8 minutes for code demonstration. Instead of running code, we'll walk through the Jupyter notebook `code_demonstration.ipynb` cell-by-cell to show our implementation.
 
 ---
 
-## PERSON B: Failure Mode Visualization (8 minutes)
+## PERSON A: Speed Benchmark Code Walkthrough (4 minutes)
+
+### Introduction (20 seconds)
+
+**[Screen shows Jupyter notebook open: code_demonstration.ipynb]**
+
+> "Hello, I'm [Person A] again. Since we have limited time, I'll walk you through our Jupyter notebook that demonstrates the speed benchmarking. This notebook contains all the code that generated our results. Let me take you through the key cells."
+
+### Part 1: Environment Setup (45 seconds)
+
+**[Scroll to Cell 1-3: Title and Environment Setup]**
+
+> "Cell 1 shows our project title and objectives. Cell 3 is our environment setup—we install the required packages: ultralytics for YOLO, torch and torchvision for the deep learning framework, matplotlib and seaborn for visualization."
+
+**[Point to Cell 3 code]**
+
+```python
+%pip install ultralytics matplotlib seaborn pillow opencv-python torch torchvision numpy
+```
+
+> "After installation, we import all libraries and configure matplotlib for inline plotting. We also display our environment info—Python 3.10, PyTorch 2.8.0, torchvision 0.23.0. We're using torchvision's Faster R-CNN which is Windows-compatible."
+
+### Part 2: Model Loading (1 minute)
+
+**[Scroll to Cells 5-8: Model Loading]**
+
+> "Cell 5 loads YOLOv8n—the nano variant. Just one line of code using the Ultralytics library. We display model info: 6.2 MB size, 3.2 million parameters. Very lightweight."
+
+**[Point to Cell 5]**
+
+```python
+yolo_model = YOLO(str(PROJECT_ROOT / 'yolov8n.pt'))
+```
+
+> "Cell 7 checks if detectron2 is available. On Windows, it's not compatible with PyTorch 2.8+, so we skip it and use torchvision instead."
+
+**[Point to Cell 8]**
+
+> "Cell 8 loads Faster R-CNN. We use torchvision's pre-trained model with COCO weights. Notice it's 167 MB—much larger than YOLO. We also create a wrapper class called `TorchvisionPredictor` to match the detectron2 interface, making our code work seamlessly with both implementations."
+
+```python
+faster_rcnn_model = fasterrcnn_resnet50_fpn(weights=weights)
+```
+
+### Part 3: Speed Benchmark Results (1 minute 15 seconds)
+
+**[Scroll to Cells 11-13: Speed Results]**
+
+> "Cell 11 loads our pre-computed speed benchmark results from `taskB_results.json`. This file contains timing data from running both models on 500 COCO images."
+
+**[Point to key output]**
+
+```python
+speed_results = json.load(f)
+print(f"FPS: {speed_results['YOLOv8n']['fps']:.2f}")  # 20.45 FPS
+print(f"FPS: {speed_results['Faster R-CNN (R50)']['fps']:.2f}")  # 0.46 FPS
+```
+
+> "The results: YOLO achieves 20.45 frames per second with a mean inference time of 48.9 milliseconds. Faster R-CNN achieves 0.46 FPS—that's 2,156 milliseconds or 2.2 seconds per image. The speedup factor: 44.1 times faster."
+
+**[Scroll to Cell 13: Speed Visualization]**
+
+> "Cell 13 creates bar charts comparing FPS and inference time. Two subplots side-by-side make the 44× speedup visually obvious. This is the visualization you saw in our presentation slides."
+
+### Part 4: Accuracy Metrics (55 seconds)
+
+**[Scroll to Cells 15-17: Accuracy Results]**
+
+> "Cell 15 loads accuracy results from `taskA_results.json`. The critical metric: mAP on small objects."
+
+**[Point to output]**
+
+```python
+print(f"mAP (Small): {accuracy_results['yolo']['metrics']['mAP(Small)']:.4f}")  # 0.0000
+print(f"mAP (Small): {accuracy_results['faster_rcnn']['metrics']['mAP(Small)']:.5f}")  # 0.00033
+```
+
+> "YOLO: 0.0000—zero percent. Faster R-CNN: 0.00033. This confirms YOLO's complete failure on small objects. Cell 17 visualizes this with a grouped bar chart showing mAP by object size category. The 'COMPLETE FAILURE' annotation on the YOLO small object bar makes this limitation unmistakable."
+
+---
+
+## PERSON B: Failure Analysis Code Walkthrough (4 minutes)
 
 ### Transition (15 seconds)
 
-> "Thank you, [Person A]. Now I'll demonstrate our failure mode analysis tools. You'll see exactly which objects YOLO misses, visualized with side-by-side comparisons showing YOLO versus Faster R-CNN on the same images. This makes the abstract failure statistics concrete."
+> "Thank you, [Person A]. I'll now walk through our failure analysis code. This is where we quantified exactly which objects YOLO misses and why."
 
-### Failure Analysis Script Execution (1.5 minutes)
+### Part 1: Failure Statistics (1 minute 15 seconds)
 
-**[Show failure analysis code execution]**
+**[Scroll to Cell 19: Failure Analysis Loading]**
 
-```powershell
-Write-Host "`n=== Analyzing YOLO Failure Cases ===" -ForegroundColor Cyan
-..\venv\Scripts\python.exe src\visualization\failure_cases.py --num_cases 20
+> "Cell 19 loads our detailed failure analysis from `failure_cases.json`. This JSON file contains every single YOLO failure—954 false negatives, 1,245 poor localizations, and 89 misclassifications."
+
+**[Point to code calculating statistics]**
+
+```python
+fn_cases = [case for case in failure_cases if case['type'] == 'false_negative']
+fn_small = len([case for case in fn_cases if case['size_category'] == 'small'])
 ```
 
-**[While script runs]**
+> "We calculate summary statistics: 650 false negatives are small objects—that's 68.2% of all failures. Even though small objects are only 45.6% of the dataset, they account for over two-thirds of failures. This proves the systematic bias against small objects."
 
-> "This script performs detailed failure analysis. It compares YOLO predictions against ground truth annotations for every object in the validation set. It identifies three failure types:"
-
-1. **False Negatives**: Objects in ground truth completely missed by YOLO (IoU < 0.1 with any prediction)
-2. **Poor Localizations**: Objects detected by YOLO but with poor bounding box accuracy (0.1 ≤ IoU < 0.5)
-3. **Misclassifications**: Objects detected with good localization (IoU ≥ 0.5) but wrong class predicted
-
-> "For each failure, we record the object's size category—small, medium, or large—and the object's category, like 'person' or 'bird' or 'bottle.'"
-
-**[When script completes]**
-
-> "Analysis complete. Let's look at the structured results:"
-
-```powershell
-Get-Content results\failure_cases\failure_cases.json | ConvertFrom-Json | Select-Object -First 1 | ConvertTo-Json -Depth 10
-```
-
-**[Point to JSON structure on screen]**
-
-> "Each failure case is documented with: image ID, object ID, failure type, object size category, ground truth bounding box coordinates, YOLO's prediction if any, and Faster R-CNN's prediction. This lets us trace every single failure back to the source image and object."
-
-### Failure Statistics Summary (2 minutes)
-
-**[Show summary statistics]**
-
-```powershell
-Write-Host "`n=== Failure Statistics Summary ===" -ForegroundColor Yellow
-$failures = Get-Content results\failure_cases\failure_cases.json | ConvertFrom-Json
-Write-Host "`nTotal False Negatives: $($failures.summary.total_false_negatives)"
-Write-Host "Small Object FNs: $($failures.summary.small_object_fn) ($($failures.summary.small_object_fn_percent)%)"
-Write-Host "Medium Object FNs: $($failures.summary.medium_object_fn)"
-Write-Host "Large Object FNs: $($failures.summary.large_object_fn)"
-```
-
-**[Display and explain clearly]**
-
-> "Let me break down the 954 false negatives by object size:"
-
-**[Show large, clear numbers]**
-
-- **Small objects** (< 32² pixels): **650 failures (68.2%)**
-- **Medium objects** (32²-96² pixels): 201 failures (21.1%)
-- **Large objects** (> 96² pixels): 103 failures (10.8%)
-
-> "This is the key finding: over two-thirds—68.2%—of all YOLO's failures are small objects, even though small objects comprise only 45.6% of the dataset. They're disproportionately failed. This proves the limitation is size-driven, not random."
-
-**[Show poor localizations]**
+**[Show output]**
 
 ```
-Poor Localizations: 1,245 cases
-Average IoU: 0.32 (threshold for 'good' is 0.5)
-Most common pattern: Small objects detected with oversized boxes
+False Negatives: 954 (13.9% of all objects)
+├─ Small:  650 (68.2% of FN)  ← Key finding
+├─ Medium: 201 (21.1% of FN)
+└─ Large:  103 (10.8% of FN)
 ```
 
-> "We also found 1,245 cases of poor localization—YOLO detected something but the bounding box was imprecise. Average IoU was 0.32, well below the 0.5 threshold for 'correct' detection. Often, YOLO draws a box 3-4 times larger than the object, including lots of background, which dilutes the IoU score."
+### Part 2: Failure Visualization (1 minute 30 seconds)
 
-### Side-by-Side Visual Comparison (3 minutes)
+**[Scroll to Cell 21: Failure Breakdown Charts]**
 
-**[Open comparison viewer script]**
+> "Cell 21 creates a 2×2 grid of visualizations. Top-left: false negatives by size—clearly dominated by small objects. Top-right: poor localizations by size—again, small objects dominate. Bottom-left: pie chart showing failure type distribution. Bottom-right: overall success vs. failure—about one-third of all objects have problems."
 
-```powershell
-Write-Host "`n=== Generating Side-by-Side Comparison Visualizations ===" -ForegroundColor Cyan
-..\venv\Scripts\python.exe src\visualization\comparison_viewer.py --generate --num_images 20 --device cpu
+**[Point to pie chart]**
+
+> "The pie chart shows 954 false negatives, 1,245 poor localizations, 89 misclassifications. Combined, 32.1% of objects are either completely missed or poorly detected."
+
+### Part 3: Side-by-Side Comparisons (1 minute 15 seconds)
+
+**[Scroll to Cell 24: Comparison Visualization Function]**
+
+> "Cell 24 generates side-by-side comparisons. The function `create_comparison_visualization` loads an image, runs YOLO on it, runs Faster R-CNN on it, and displays them side-by-side with bounding boxes."
+
+**[Point to the three demo images]**
+
+> "We demonstrate three failure cases:"
+
+**Example 1: Office Desk (Image 516916)**
+
+> "Office scene with 5 computers and an office chair. YOLO detects 2-3 large objects. Faster R-CNN detects 4-5, including small monitors and peripherals."
+
+**Example 2: Kitchen (Image 530836)**
+
+> "Kitchen with 2 fridges, stove, oven, sink. YOLO detects 2-3 large appliances. Faster R-CNN detects 4-5, including the second smaller fridge."
+
+**Example 3: Living Room (Image 357888)**
+
+> "Person holding yellow kite with wooden cabinet. YOLO detects 1-2 objects—person and maybe kite. Faster R-CNN detects all 3: person, kite, cabinet."
+
+**[Scroll down to show output examples]**
+
+> "When you run these cells, you see the actual images with green boxes for YOLO detections and blue boxes for Faster R-CNN detections. The visual comparison makes YOLO's limitations immediately obvious."
+
+### Part 4: Trade-off Visualization (45 seconds)
+
+**[Scroll to Cell 26: Speed-Accuracy Trade-off Plot]**
+
+> "Cell 26 creates our final visualization: the speed-accuracy trade-off plot. X-axis: inference time on logarithmic scale. Y-axis: mAP score. Two data points representing the two models."
+
+**[Point to plot code]**
+
+```python
+ax.scatter(inference_times, map_scores, ...)  # Plot two points
+ax.set_xscale('log')  # Logarithmic x-axis
 ```
 
-**[As script generates comparisons]**
+> "YOLO is in the top-left—fast but lower accuracy on small objects. Faster R-CNN is bottom-right—slow but higher accuracy. The dashed line represents the Pareto frontier. These models represent fundamentally different trade-offs, and the choice depends entirely on your application requirements."
 
-> "This script loads actual images from our test set and runs both models on them. It creates side-by-side visualizations:"
+### Closing Summary (15 seconds)
 
-- **Left side**: YOLO detections shown in green boxes
-- **Right side**: Faster R-CNN detections shown in blue boxes
-- **Red boxes**: Ground truth objects that YOLO completely missed
-- **Orange boxes**: Poor localizations where YOLO detected but with IoU < 0.5
+**[Scroll to Cell 27: Summary]**
 
-**[Once images are generated, open first comparison]**
-
-```powershell
-Write-Host "`n=== Displaying Failure Case Examples ===" -ForegroundColor Green
-Start-Process results\comparisons\comparison_0001.png
-```
-
-**[Discuss the image in detail]**
-
-**Example Image 1: Office Desk Scene**
-
-> "Here's our first example: an office desk with 5 computer monitors and laptops, plus an office chair. Look at the green boxes on the left side—those are YOLO's detections. YOLO detected 2-3 large objects like the desk and chair."
-
-> "Now look at the right side: Faster R-CNN detected 4-5 objects with blue boxes, including smaller monitors and peripherals that YOLO missed. The small keyboards, mice, and monitor edges fall below YOLO's detection threshold."
-
-> "This demonstrates YOLO's limitation with small office equipment—objects smaller than 32×32 pixels are systematically missed."
-
-**[Open next comparison]**
-
-```powershell
-Start-Process results\comparisons\comparison_0005.png
-```
-
-**Example Image 2: Kitchen Scene**
-
-> "This is a kitchen scene with multiple appliances: 2 refrigerators, a stove, an oven, and a sink. On the left, YOLO detected 2-3 large appliances—the main refrigerator and oven shown in green boxes. Notice what's missing."
-
-> "On the right, Faster R-CNN detected 4-5 appliances with blue boxes, including the second smaller refrigerator and additional kitchen equipment. YOLO's grid-based approach struggles when multiple appliances are present, especially smaller or more distant ones."
-
-> "This demonstrates both the small object limitation AND the dense scene challenge—multiple kitchen items in close proximity overwhelm YOLO's detection capacity."
-
-**[Open third comparison]**
-
-```powershell
-Start-Process results\comparisons\comparison_0012.png
-```
-
-**Example Image 3: Living Room with Kite**
-
-> "This living room scene shows a person holding a yellow kite with a wooden cabinet beside them. YOLO detected 1-2 large objects—the person (shown in green) and possibly the kite, but missed the cabinet."
-
-> "Compare to Faster R-CNN on the right: blue boxes show detection of the person, the kite, AND the cabinet. Small decorative items or cabinet details are also better captured by Faster R-CNN's multi-scale proposal mechanism."
-
-> "This shows that even in moderately complex indoor scenes, YOLO struggles with multiple objects in close proximity. The cabinet and person fall in adjacent grid cells, and YOLO prioritizes the larger, more prominent human figure."
-
-### Architecture Visualization (1 minute)
-
-**[Show YOLO grid overlay on one of the failure images]**
-
-> "Let me show you why this happens architecturally. I'll overlay YOLO's 20×20 detection grid on this image with the birds."
-
-**[Point to grid cells and small objects]**
-
-> "These grid lines represent the boundaries of YOLO's grid cells—each cell is 32×32 pixels. Now look at where the birds fall. Multiple birds fall within single grid cells. Each cell's feature representation comes from a heavily downsampled 20×20 feature map. By the time the image passes through multiple convolution and pooling layers, these tiny birds are represented by just a fraction of a pixel in the feature map. There's literally not enough information to detect them."
-
-**[Show conceptual Faster R-CNN proposals]**
-
-> "Faster R-CNN, by contrast, generates explicit proposals for small objects—these small red rectangles represent 32×32 anchor boxes that the RPN uses to search for tiny objects. When one of these anchors overlaps with a bird, the RPN says 'there's probably an object here,' generates a proposal, and the ROI head processes it individually with dedicated computation."
-
-> "That's the architectural difference: YOLO shares computation across a large grid cell; Faster R-CNN dedicates computation to each candidate object."
-
-### Closing Summary (30 seconds)
-
-**[Show final summary in terminal]**
-
-```powershell
-Write-Host "`n=== DEMONSTRATION COMPLETE ===" -ForegroundColor Green
-Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-Write-Host "✅ Speed: YOLO 44.1x faster (20.45 vs 0.46 FPS)"
-Write-Host "❌ Small Objects: YOLO 0.0% vs Faster R-CNN 0.033% mAP"
-Write-Host "📊 Failures: 954 false negatives, 68.2% due to small size"
-Write-Host "🎯 Conclusion: Architectural trade-off—speed vs. small object capability"
-Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-Write-Host "`nAll code available at: github.com/DonutDaEarth/yolo_limitations_project_sgu" -ForegroundColor Cyan
-```
-
-> "This concludes our code demonstration. We've shown three things:"
-
-1. **Speed benchmark**: Live validation of 44× speedup
-2. **Accuracy comparison**: Confirmed 0% small object detection for YOLO
-3. **Failure visualization**: Showed real examples where YOLO systematically fails on small and dense objects
-
-> "All code, data, and documentation are available on our GitHub repository for full reproducibility. Our technical report provides complete implementation details, statistical analysis, and architectural explanations."
-
----
-
-# 📊 EVALUATION CRITERIA ALIGNMENT
-
-## How This Presentation Addresses Each Criterion:
-
-### 1. Technical Execution & Results (30%)
-
-**Addressed in:**
-
-- Part 2 (Person A): Live benchmark demonstration validates metrics
-- Technical Report (separate document): Complete methodology
-
-**Evidence:**
-✅ Both models correctly implemented and tested (shown loading successfully)
-✅ Accurate calculation of mAP, mAP(Small), FPS (results displayed)
-✅ Reproducible code demonstrated live (all scripts executed successfully)
-✅ Results match reported values (44.1x speedup, 0% small object mAP confirmed)
-
-### 2. Analysis & Discussion (30%)
-
-**Addressed in:**
-
-- Part 1 (Person B): 8-minute deep dive into limitations
-- Technical Report: Sections 4.1-4.2 provide architectural explanations
-
-**Evidence:**
-✅ Explained WHY YOLO fails (grid resolution, feature dilution, receptive field analysis)
-✅ Linked failures to architecture (grid-based vs. proposal-based)
-✅ Quantified failures (68.2% small objects, 954 false negatives)
-✅ Practical cost analysis (medical vs. autonomous driving scenarios)
-
-### 3. Presentation Quality (20%)
-
-**Addressed in:**
-
-- Part 1: 15-minute structured presentation with clear narrative
-- Visual aids throughout
-
-**Evidence:**
-✅ Clear, professional language (avoided jargon, explained concepts)
-✅ Effective data visualization (tables, plots, side-by-side images)
-✅ Strict time management (7+8 minutes = 15 minutes total for Part 1)
-✅ Logical flow: architectures → limitations → failures → implications
-
-### 4. Code Demonstration (20%)
-
-**Addressed in:**
-
-- Part 2: 15-minute live code execution
-
-**Evidence:**
-✅ Smooth, runnable demonstration (all scripts executed without errors)
-✅ Speed benchmark validates FPS and mAP scores in real-time
-✅ Side-by-side visualization shows specific failure cases with visual evidence
-✅ Clear explanation of what code does and architectural reasons for failures
-
----
-
-# 🎯 PRESENTER RESPONSIBILITIES SUMMARY
-
-## PERSON A (Architecture & Speed Focus)
-
-### Part 1: Live Presentation (7 min)
-
-- Project introduction & goals
-- YOLO architecture (grid-based, single-shot)
-- Faster R-CNN architecture (two-stage, RPN, ROI pooling)
-- Architectural comparison table
-
-### Part 2: Code Demo (7 min)
-
-- Environment verification
-- Model loading demonstration
-- Speed benchmark execution
-- Results display (44.1x speedup)
-- Speed-accuracy plot visualization
-
-**Total Time: ~14 minutes**
-
----
-
-## PERSON B (Limitations & Failures Focus)
-
-### Part 1: Live Presentation (8 min)
-
-- Small object detection failure (0% mAP)
-- Grid resolution and feature dilution explanation
-- Dense object failure analysis
-- Quantitative failure breakdown (68.2% small objects)
-- Real-world application implications
-
-### Part 2: Code Demo (8 min)
-
-- Failure analysis script execution
-- Failure statistics display
-- Side-by-side visual comparisons (3 examples)
-- Architectural visualization (grid overlay)
-- Summary of findings
-
-**Total Time: ~16 minutes**
-
----
-
-# 📋 PRE-RECORDING CHECKLIST
-
-## Technical Setup (30 minutes before)
-
-- [ ] Test all scripts run successfully without errors
-- [ ] Verify virtual environment activates (`..\venv\Scripts\python.exe`)
-- [ ] Check all result files exist:
-  - [ ] `results/metrics/taskA_results.json`
-  - [ ] `results/benchmark/taskB_results.json`
-  - [ ] `results/failure_cases/failure_cases.json`
-  - [ ] `results/plots/speed_accuracy_tradeoff.png`
-- [ ] Pre-generate comparison images (`comparison_viewer.py`)
-- [ ] Screen resolution set to 1920×1080 for clarity
-- [ ] Close unnecessary background applications
-- [ ] Disable notifications (Windows Focus Assist)
-
-## Presentation Materials
-
-- [ ] Technical report PDF ready (for reference, not shown in recording)
-- [ ] Slides with architecture diagrams prepared
-- [ ] Comparison images verified to open correctly
-- [ ] Terminal window sized appropriately (font size 14-16pt for readability)
-- [ ] PowerShell prompt customized if needed
-
-## Recording Quality
-
-- [ ] Microphone tested (clear audio, no background noise)
-- [ ] Screen recording software configured (OBS, Camtasia, or built-in Windows)
-- [ ] Webcam positioned (if showing presenters)
-- [ ] Lighting adequate (if showing faces)
-- [ ] Recording destination folder has sufficient space (5-10 GB for 30-min video)
-
-## Rehearsal
-
-- [ ] Full run-through completed (with timing)
-- [ ] Part 1 timing: 7 min (Person A) + 8 min (Person B) = 15 min ✓
-- [ ] Part 2 timing: 7 min (Person A) + 8 min (Person B) = 15 min ✓
-- [ ] Transitions between presenters smooth
-- [ ] All technical terms pronounced correctly (e.g., "CSPDarknet," "ROI pooling")
-
-## Final Check (5 minutes before)
-
-- [ ] Both presenters familiar with entire script
-- [ ] Backup plan if code doesn't run (screenshots ready as fallback)
-- [ ] Questions anticipated and answers prepared
-- [ ] Water bottles ready (stay hydrated!)
-- [ ] Confidence level: HIGH! 🚀
-
----
-
-# 🎬 RECORDING TIPS
-
-### For Person A (Architecture & Speed Focus):
-
-- **Voice**: Speak clearly and at moderate pace (not too fast—viewers need to process technical concepts)
-- **Visuals**: Use cursor/pointer to highlight specific parts of architecture diagrams
-- **Code**: Let terminal output display for 3-5 seconds before explaining—viewers need time to read
-- **Emphasis**: Stress "44.1x speedup" number—it's your key quantitative finding
-- **Transitions**: End your sections with a natural segue to Person B (e.g., "Now, [Person B] will explain why this matters...")
-
-### For Person B (Limitations & Failures Focus):
-
-- **Voice**: Use vocal emphasis when stating "0.0% versus 0.033%"—it's dramatic and surprising
-- **Visuals**: Pause 2-3 seconds after showing each failure case image—let it sink in visually
-- **Gestures**: If on camera, use hand gestures when explaining "grid cells" (show squares with hands)
-- **Eye Contact**: Make eye contact with camera when delivering key conclusions
-- **Passion**: Show enthusiasm—this is your research; you're excited about the findings!
-
-### Technical Recording Notes:
-
-- **Segments**: Record Part 1 and Part 2 separately (easier to edit if there are mistakes)
-- **Mistakes**: If you make a mistake, pause 3 seconds, say "Let me restart from..." and redo that section
-- **Editing**: Use video editing software to:
-  - Remove long pauses or mistakes
-  - Add text overlays for key numbers (44.1x, 0.0%, 68.2%)
-  - Add zoom-in effects on small details (e.g., mAP values in JSON)
-  - Add picture-in-picture during transitions between presenters
-- **Audio**: Record in a quiet room; use noise suppression in post-editing if needed
-- **Backup**: Save raw recordings before editing (in case you need to re-edit later)
-
----
-
-# ✅ SUCCESS INDICATORS
-
-After watching your recorded presentation, the audience should be able to:
-
-1. ✅ **Explain** why YOLO fails on small objects (grid-based approach, feature map resolution)
-2. ✅ **Quantify** the trade-off (44x speed for 100% loss of small object detection)
-3. ✅ **Decide** when to use YOLO vs. Faster R-CNN for a given application
-4. ✅ **Understand** the two-stage vs. single-shot architectural difference
-5. ✅ **Trust** your implementation (saw live code execution validating results)
-6. ✅ **Recall** specific numbers (0.0%, 20.45 FPS, 954 failures, 68.2% small objects)
-
-**If viewers can do these six things, your presentation is a complete success! 🎯**
-
----
-
-# 📚 SUPPORTING DOCUMENTS
-
-## Provided Files:
-
-1. **FULL_TECHNICAL_REPORT.md** (5-7 pages)
-
-   - Complete written report with all sections
-   - Introduction, Methodology, Results, Discussion, Conclusion
-   - Tables, statistical analysis, references
-   - Appendices with code structure and hyperparameters
-
-2. **FULL_PRESENTATION_SCRIPT.md** (this file)
-
-   - Word-for-word script for 30-minute recorded presentation
-   - Part 1: Live Presentation (15 min)
-   - Part 2: Code Demonstration (15 min)
-
-3. **CODE_DEMO_GUIDE.md**
-
-   - Detailed technical guide for running code
-   - Backup commands and troubleshooting
-
-4. **DEMO_COMMANDS.md**
-
-   - Quick reference sheet with essential commands
-   - Key numbers to memorize
-
-5. **ANALYSIS_SUMMARY.md**
-   - Executive summary of findings
-   - High-level results and recommendations
-
-## GitHub Repository:
-
-- **All source code** in `src/` directory
-- **Experiment scripts** in `scripts/` directory
-- **Results data** in `results/` directory
-- **Configuration** in `config/` directory
-- **README.md** with setup instructions
-
----
-
-**Good luck with your recording! You've done outstanding work—now present it with confidence! 🚀**
+> "Cell 27 shows our final summary: 44.1× speedup, 0.0% small object mAP for YOLO, 954 false negatives with 68.2% small objects, and practical guidance on when to use each model. All this code is executable and reproducible—every result in our presentation came from this notebook. The complete code is available on our GitHub repository."
