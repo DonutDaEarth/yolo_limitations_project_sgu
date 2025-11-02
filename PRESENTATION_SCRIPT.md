@@ -203,17 +203,17 @@
 
 > "Here are three concrete examples:"
 
-**Image 1: Small Bird Flock**
+**Image 1: Office Desk Scene**
 
-> "This image contains 8 small birds in the background, each about 200-400 pixels² area. YOLO detected 1 bird—the largest one in the foreground. Faster R-CNN detected 6 of the 8. YOLO missed 7/8 birds, an 87.5% false negative rate."
+> "This office scene contains 5 computer monitors and laptops on a desk with an office chair. YOLO detected 2-3 larger objects like the desk and chair. Faster R-CNN detected 4-5 objects including smaller monitors and peripherals. Small office items like keyboards, mice, or monitor edges are missed by YOLO due to their size being below the 32×32 pixel grid resolution."
 
-**Image 2: Dense Crowd**
+**Image 2: Kitchen Scene**
 
-> "This crowded plaza has 12 people: 6 small (distant), 4 medium, 2 large (foreground). YOLO detected 4 people—the 2 large and 2 medium. It missed all 6 small people. Faster R-CNN detected 9 people, including 3 of the small ones. YOLO's miss rate: 66.7%."
+> "This kitchen contains multiple appliances: 2 refrigerators, a stove, an oven, and a sink. YOLO detected 2-3 large appliances—the main refrigerator and oven. Faster R-CNN detected 4-5 appliances including the second smaller fridge and additional kitchen equipment. Small kitchen items and distant appliances are systematically missed by YOLO's grid-based approach."
 
-**Image 3: Table Setting**
+**Image 3: Living Room with Kite**
 
-> "This table has 15 utensils—forks, knives, spoons—all small objects. YOLO detected 2 utensils, the largest ones with highest contrast. Faster R-CNN detected 11 utensils. YOLO missed 13/15, an 86.7% false negative rate."
+> "This living room shows a person holding a yellow kite, with a wooden cabinet beside them. YOLO detected 1-2 large objects—the person and possibly the kite. Faster R-CNN detected 2-3 objects—the person, kite, and cabinet. Small decorative items or cabinet details are missed by YOLO because multiple objects in close proximity overwhelm individual grid cells."
 
 ### Real-World Implications (1.5 minutes)
 
@@ -485,13 +485,13 @@ Start-Process results\comparisons\comparison_0001.png
 
 **[Discuss the image in detail]**
 
-**Example Image 1: Small Objects (Birds)**
+**Example Image 1: Office Desk Scene**
 
-> "Here's our first example: an image with 8 small birds in the background. Look at the red boxes on the left side—those are objects YOLO completely missed. Count them: 1, 2, 3, 4, 5, 6, 7 missed detections. YOLO detected only the one large bird in the foreground—the green box."
+> "Here's our first example: an office desk with 5 computer monitors and laptops, plus an office chair. Look at the green boxes on the left side—those are YOLO's detections. YOLO detected 2-3 large objects like the desk and chair."
 
-> "Now look at the right side: Faster R-CNN detected 6 of the 8 birds—the blue boxes. The 2 it missed are extremely tiny, under 10×10 pixels, at the limit of detectability."
+> "Now look at the right side: Faster R-CNN detected 4-5 objects with blue boxes, including smaller monitors and peripherals that YOLO missed. The small keyboards, mice, and monitor edges fall below YOLO's detection threshold."
 
-> "This is YOLO's small object limitation in action: 7 out of 8 birds missed, an 87.5% false negative rate."
+> "This demonstrates YOLO's limitation with small office equipment—objects smaller than 32×32 pixels are systematically missed."
 
 **[Open next comparison]**
 
@@ -499,13 +499,13 @@ Start-Process results\comparisons\comparison_0001.png
 Start-Process results\comparisons\comparison_0005.png
 ```
 
-**Example Image 2: Dense Scene (Crowded Street)**
+**Example Image 2: Kitchen Scene**
 
-> "This is a crowded street scene with multiple people at varying distances. On the left, YOLO detected 4 people—the large, prominent ones in the foreground, shown in green. Count the red boxes: those are people YOLO missed, mostly in the background where they appear smaller."
+> "This is a kitchen scene with multiple appliances: 2 refrigerators, a stove, an oven, and a sink. On the left, YOLO detected 2-3 large appliances—the main refrigerator and oven shown in green boxes. Notice what's missing."
 
-> "On the right, Faster R-CNN detected 9 people—blue boxes—including several background figures. The ground truth was 11 people total. YOLO's miss rate: 64% of people."
+> "On the right, Faster R-CNN detected 4-5 appliances with blue boxes, including the second smaller refrigerator and additional kitchen equipment. YOLO's grid-based approach struggles when multiple appliances are present, especially smaller or more distant ones."
 
-> "This demonstrates both the small object limitation AND the dense scene limitation we discussed earlier. Multiple small people in the background overwhelm YOLO's grid-based detection."
+> "This demonstrates both the small object limitation AND the dense scene challenge—multiple kitchen items in close proximity overwhelm YOLO's detection capacity."
 
 **[Open third comparison]**
 
@@ -513,11 +513,13 @@ Start-Process results\comparisons\comparison_0005.png
 Start-Process results\comparisons\comparison_0012.png
 ```
 
-**Example Image 3: Poor Localization (Small Dog)**
+**Example Image 3: Living Room with Kite**
 
-> "This example shows a poor localization case. YOLO DID detect this small dog—you can see the green box on the left—but look at the bounding box. It's twice the size of the dog, including a lot of background floor and furniture. The IoU with ground truth is 0.38, below our 0.5 threshold for a 'correct' detection."
+> "This living room scene shows a person holding a yellow kite with a wooden cabinet beside them. YOLO detected 1-2 large objects—the person (shown in green) and possibly the kite, but missed the cabinet."
 
-> "Compare to Faster R-CNN on the right: the blue box fits tightly around the dog. IoU is 0.72—a good detection. This shows that even when YOLO detects small objects, it struggles with precise localization. The bounding box regression is imprecise for small objects."
+> "Compare to Faster R-CNN on the right: blue boxes show detection of the person, the kite, AND the cabinet. Small decorative items or cabinet details are also better captured by Faster R-CNN's multi-scale proposal mechanism."
+
+> "This shows that even in moderately complex indoor scenes, YOLO struggles with multiple objects in close proximity. The cabinet and person fall in adjacent grid cells, and YOLO prioritizes the larger, more prominent human figure."
 
 ### Architecture Visualization (1 minute)
 
